@@ -28,7 +28,3 @@ as-slice = { version = "0.1.4", optional = true }
 embedded-graphics-simulator = "0.3.0-alpha.2"
 sdl2 = "0.32.2"
 heapless = "0.5.6"
-
-[patch.crates-io]
-embedded-graphics = { git = "https://github.com/embedded-graphics/embedded-graphics" }
-embedded-graphics-core = { git = "https://github.com/embedded-graphics/embedded-graphics" }
