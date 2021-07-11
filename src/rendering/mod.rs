@@ -150,7 +150,10 @@ where
             state = StyledLineRenderer::new(line_cursor, state).draw(&mut display)?;
 
             match state.end_type {
-                LineEndType::EndOfText => break,
+                LineEndType::EndOfText => {
+                    state.plugin.end_of_text();
+                    break;
+                }
                 LineEndType::CarriageReturn => {}
                 _ => {
                     cursor.new_line();

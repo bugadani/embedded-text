@@ -124,6 +124,12 @@ where
         this.lookahead = this.plugin.clone();
     }
 
+    pub fn end_of_text(&self) {
+        let mut this = self.inner.borrow_mut();
+
+        this.lookahead.end_of_text();
+    }
+
     pub fn set_state(&self, state: ProcessingState) {
         self.inner.borrow_mut().state = state;
     }

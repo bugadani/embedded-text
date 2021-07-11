@@ -26,6 +26,10 @@ where
     #[inline]
     fn new_line(&mut self) {}
 
+    /// Called after rendering has finished.
+    #[inline]
+    fn end_of_text(&mut self) {}
+
     /// Generate the next text token.
     #[inline]
     fn next_token(
@@ -82,6 +86,10 @@ where
         self.object.new_line();
     }
 
+    fn end_of_text(&mut self) {
+        self.object.end_of_text();
+    }
+
     fn next_token(
         &mut self,
         next_token: impl FnMut() -> Option<Token<'a, C>>,
@@ -127,6 +135,11 @@ where
     fn new_line(&mut self) {
         self.parent.new_line();
         self.object.new_line();
+    }
+
+    fn end_of_text(&mut self) {
+        self.parent.end_of_text();
+        self.object.end_of_text();
     }
 
     fn next_token(

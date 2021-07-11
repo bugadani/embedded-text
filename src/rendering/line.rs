@@ -206,15 +206,18 @@ where
             ..
         } = self.state.clone();
 
-        let mut cloned_parser = parser.clone();
-        let measure_plugin = plugin.clone();
-        measure_plugin.set_state(ProcessingState::Measure);
-        let lm = style.measure_line(
-            &measure_plugin,
-            &character_style,
-            &mut cloned_parser,
-            self.cursor.line_width(),
-        );
+        let lm = {
+            // Ensure the clone lives for as short as possible.
+            let mut cloned_parser = parser.clone();
+            let measure_plugin = plugin.clone();
+            measure_plugin.set_state(ProcessingState::Measure);
+            style.measure_line(
+                &measure_plugin,
+                &character_style,
+                &mut cloned_parser,
+                self.cursor.line_width(),
+            )
+        };
 
         let (end_type, end_pos) = if display.bounding_box().size.height == 0 {
             // We're outside of the view. Use simpler render element handler and space config.
