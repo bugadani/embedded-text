@@ -23,7 +23,7 @@ This crate provides a configurable `TextBox` to render multiline text inside a b
  - carriage return (`\r`)
  - tab (`\t`) with configurable tab size
 
-`TextBox` also supports text coloring using [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code).
+`TextBox` also supports text coloring using [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code) via the `Ansi` plugin.
 
 ### Example
 
@@ -32,7 +32,7 @@ The examples are based on [the embedded-graphics simulator]. The simulator is bu
 
 ![embedded-text example](https://raw.githubusercontent.com/embedded-graphics/embedded-text/master/assets/paragraph_spacing.png)
 
-![embedded-text example with colored text](https://raw.githubusercontent.com/embedded-graphics/embedded-text/master/assets/styles-ansi.png)
+![embedded-text example with colored text](https://raw.githubusercontent.com/embedded-graphics/embedded-text/master/assets/plugin-ansi.png)
 
 ```rust
 use embedded_graphics::{
@@ -93,7 +93,6 @@ fn main() {
 
 ## Cargo features
 
- * `ansi`: enables ANSI sequence support. This feature is enabled by default.
  * `plugin` (*experimental*): allows the user to implement plugins.
 
 [embedded-graphics]: https://github.com/embedded-graphics/embedded-graphics/

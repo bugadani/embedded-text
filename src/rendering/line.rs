@@ -148,7 +148,6 @@ where
         Ok(())
     }
 
-    #[cfg(feature = "ansi")]
     fn change_text_style(
         &mut self,
         change: ChangeTextStyle<<F as CharacterStyle>::Color>,
@@ -174,7 +173,6 @@ where
         str_width(self.style, st)
     }
 
-    #[cfg(feature = "ansi")]
     fn change_text_style(
         &mut self,
         change: ChangeTextStyle<<F as CharacterStyle>::Color>,
@@ -449,71 +447,5 @@ mod test {
                 "........................",
             ],
         );
-    }
-}
-
-#[cfg(all(test, feature = "ansi"))]
-mod ansi_parser_tests {
-    use crate::{
-        parser::Parser,
-        plugin::{NoPlugin, PluginWrapper},
-        rendering::{
-            cursor::LineCursor,
-            line::{LineRenderState, StyledLineRenderer},
-            line_iter::LineEndType,
-        },
-        style::{TabSize, TextBoxStyleBuilder},
-        utils::test::size_for,
-    };
-    use embedded_graphics::{
-        mock_display::MockDisplay,
-        mono_font::{ascii::FONT_6X9, MonoTextStyleBuilder},
-        pixelcolor::BinaryColor,
-        Drawable,
-    };
-
-    #[test]
-    fn ansi_cursor_backwards() {
-        let mut display = MockDisplay::new();
-        display.set_allow_overdraw(true);
-
-        let parser = Parser::parse("foo\x1b[2Dsample");
-
-        let character_style = MonoTextStyleBuilder::new()
-            .font(&FONT_6X9)
-            .text_color(BinaryColor::On)
-            .background_color(BinaryColor::Off)
-            .build();
-
-        let style = TextBoxStyleBuilder::new().build();
-
-        let cursor = LineCursor::new(
-            size_for(&FONT_6X9, 7, 1).width,
-            TabSize::Spaces(4).into_pixels(&character_style),
-        );
-
-        let plugin = PluginWrapper::new(NoPlugin::new());
-        let state = LineRenderState {
-            parser,
-            character_style,
-            style,
-            end_type: LineEndType::EndOfText,
-            plugin: &plugin,
-        };
-        StyledLineRenderer::new(cursor, state)
-            .draw(&mut display)
-            .unwrap();
-
-        display.assert_pattern(&[
-            "..........................................",
-            "...#...........................##.........",
-            "..#.#...........................#.........",
-            "..#.....###...###.##.#...###....#.....##..",
-            ".###...##....#..#.#.#.#..#..#...#....#.##.",
-            "..#......##..#..#.#.#.#..#..#...#....##...",
-            "..#....###....###.#...#..###...###....###.",
-            ".........................#................",
-            ".........................#................",
-        ]);
     }
 }

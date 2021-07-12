@@ -11,7 +11,7 @@ use embedded_graphics::{
     text::LineHeight,
 };
 use embedded_graphics_simulator::{OutputSettingsBuilder, SimulatorDisplay, Window};
-use embedded_text::{style::TextBoxStyleBuilder, TextBox};
+use embedded_text::{plugin::ansi::Ansi, style::TextBoxStyleBuilder, TextBox};
 use std::convert::Infallible;
 
 fn main() -> Result<(), Infallible> {
@@ -52,6 +52,7 @@ fn main() -> Result<(), Infallible> {
         character_style,
         textbox_style,
     )
+    .add_plugin(Ansi::new())
     .draw(&mut display)?;
 
     // Set up the window and show the display's contents.

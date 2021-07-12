@@ -1,8 +1,7 @@
 //! Pixel iterators used for text rendering.
-#[cfg(feature = "ansi")]
-mod ansi;
+
 pub(crate) mod cursor;
-mod line;
+pub(crate) mod line;
 pub(crate) mod line_iter;
 pub(crate) mod space_config;
 

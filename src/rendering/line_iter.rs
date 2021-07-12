@@ -12,11 +12,8 @@ use crate::{
 use az::{SaturatingAs, SaturatingCast};
 use embedded_graphics::{pixelcolor::Rgb888, prelude::PixelColor};
 
-#[cfg(feature = "ansi")]
-use super::ansi::try_parse_sgr;
-#[cfg(feature = "ansi")]
+use crate::plugin::ansi::utils::try_parse_sgr;
 use ansi_parser::AnsiSequence;
-#[cfg(feature = "ansi")]
 use as_slice::AsSlice;
 
 /// Parser to break down a line into primitive elements used by measurement and rendering.
@@ -123,7 +120,6 @@ where
                     break 'lookahead;
                 }
 
-                #[cfg(feature = "ansi")]
                 Some(Token::EscapeSequence(_)) => {}
 
                 _ => break 'lookahead,
@@ -188,15 +184,14 @@ where
                 Some(Token::Whitespace(n, _)) => spaces.consume(n).saturating_as(),
                 Some(Token::Tab) => cursor.next_tab_width().saturating_as(),
 
-                #[cfg(feature = "ansi")]
-                Some(Token::EscapeSequence(AnsiSequence::CursorForward(by))) => by.saturating_as(),
-
-                #[cfg(feature = "ansi")]
-                Some(Token::EscapeSequence(AnsiSequence::CursorBackward(by))) => {
-                    -by.saturating_as::<i32>()
+                Some(Token::EscapeSequence(AnsiSequence::CursorForward(by))) => {
+                    (by * handler.measure(" ")).saturating_as()
                 }
 
-                #[cfg(feature = "ansi")]
+                Some(Token::EscapeSequence(AnsiSequence::CursorBackward(by))) => {
+                    -(by * handler.measure(" ")).saturating_as::<i32>()
+                }
+
                 Some(Token::EscapeSequence(_)) => 0,
 
                 _ => return false,
@@ -378,7 +373,6 @@ where
                     }
                 }
 
-                #[cfg(feature = "ansi")]
                 Token::EscapeSequence(seq) => {
                     match seq {
                         AnsiSequence::SetGraphicsMode(vec) => {
@@ -477,7 +471,7 @@ where
 }
 
 #[cfg(test)]
-mod test {
+pub(crate) mod test {
     use std::convert::Infallible;
 
     use super::*;
@@ -496,7 +490,7 @@ mod test {
     };
 
     #[derive(PartialEq, Eq, Debug)]
-    pub(super) enum RenderElement<C: PixelColor> {
+    pub enum RenderElement<C: PixelColor> {
         Space(u32, bool),
         String(String, u32),
         MoveCursor(i32),
@@ -554,7 +548,6 @@ mod test {
             Ok(())
         }
 
-        #[cfg(feature = "ansi")]
         fn change_text_style(
             &mut self,
             change: ChangeTextStyle<Self::Color>,
@@ -565,7 +558,7 @@ mod test {
     }
 
     #[track_caller]
-    pub(super) fn assert_line_elements<'a, M>(
+    pub(crate) fn assert_line_elements<'a, M>(
         parser: &mut Parser<'a, Rgb888>,
         max_chars: u32,
         elements: &[RenderElement<Rgb888>],
@@ -775,65 +768,5 @@ mod test {
         let mw = PluginWrapper::new(NoPlugin::<Rgb888>::new());
 
         assert_line_elements(&mut parser, 2, &[RenderElement::string("So", 12)], &mw);
-    }
-}
-
-#[cfg(all(test, feature = "ansi"))]
-mod ansi_parser_tests {
-    use super::{
-        test::{assert_line_elements, RenderElement},
-        *,
-    };
-    use crate::plugin::{NoPlugin, PluginWrapper};
-
-    use embedded_graphics::pixelcolor::Rgb888;
-
-    #[test]
-    fn colors() {
-        let mut parser = Parser::parse("Lorem \x1b[92mIpsum");
-        let mw = PluginWrapper::new(NoPlugin::<Rgb888>::new());
-
-        assert_line_elements(
-            &mut parser,
-            100,
-            &[
-                RenderElement::string("Lorem", 30),
-                RenderElement::Space(6, true),
-                RenderElement::ChangeTextStyle(ChangeTextStyle::TextColor(Some(Rgb888::new(
-                    22, 198, 12,
-                )))),
-                RenderElement::string("Ipsum", 30),
-            ],
-            &mw,
-        );
-    }
-
-    #[test]
-    fn ansi_code_does_not_break_word() {
-        let mut parser = Parser::parse("Lorem foo\x1b[92mbarum");
-        let mw = PluginWrapper::new(NoPlugin::<Rgb888>::new());
-
-        assert_line_elements(
-            &mut parser,
-            8,
-            &[
-                RenderElement::string("Lorem", 30),
-                RenderElement::Space(6, false),
-            ],
-            &mw,
-        );
-
-        assert_line_elements(
-            &mut parser,
-            8,
-            &[
-                RenderElement::string("foo", 18),
-                RenderElement::ChangeTextStyle(ChangeTextStyle::TextColor(Some(Rgb888::new(
-                    22, 198, 12,
-                )))),
-                RenderElement::string("barum", 30),
-            ],
-            &mw,
-        );
     }
 }

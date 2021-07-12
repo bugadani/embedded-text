@@ -16,7 +16,6 @@
 //!     tokens
 //! );
 //! ```
-#[cfg(feature = "ansi")]
 use ansi_parser::AnsiSequence;
 use core::{marker::PhantomData, str::Chars};
 use embedded_graphics::{prelude::PixelColor, text::DecorationColor};
@@ -71,7 +70,6 @@ where
     ChangeTextStyle(ChangeTextStyle<C>),
 
     /// An ANSI escape sequence
-    #[cfg(feature = "ansi")]
     EscapeSequence(AnsiSequence),
 }
 
@@ -90,13 +88,11 @@ where
 pub(crate) const SPEC_CHAR_NBSP: char = '\u{a0}';
 pub(crate) const SPEC_CHAR_ZWSP: char = '\u{200b}';
 pub(crate) const SPEC_CHAR_SHY: char = '\u{ad}';
-pub(crate) const SPEC_CHAR_ESCAPE: char = '\x1b';
 
 fn is_word_char(c: char) -> bool {
     // Word tokens are terminated when a whitespace, zwsp or shy character is found. An exception
     // to this rule is the nbsp, which is whitespace but is included in the word.
-    (!c.is_whitespace() || c == SPEC_CHAR_NBSP)
-        && ![SPEC_CHAR_ZWSP, SPEC_CHAR_SHY, SPEC_CHAR_ESCAPE].contains(&c)
+    (!c.is_whitespace() || c == SPEC_CHAR_NBSP) && ![SPEC_CHAR_ZWSP, SPEC_CHAR_SHY].contains(&c)
 }
 
 fn is_space_char(c: char) -> bool {
@@ -185,14 +181,6 @@ where
                             string.get_unchecked(0..c.len_utf8())
                         },
                     )),
-                    #[cfg(feature = "ansi")]
-                    SPEC_CHAR_ESCAPE => ansi_parser::parse_escape(string).map_or(
-                        Some(Token::EscapeSequence(AnsiSequence::Escape)),
-                        |(string, output)| {
-                            self.inner = string.chars();
-                            Some(Token::EscapeSequence(output))
-                        },
-                    ),
 
                     // count consecutive whitespace
                     _ => {
@@ -315,79 +303,6 @@ mod test {
             vec![
                 Token::Word("foo"),
                 Token::Break("-", "\u{ad}"),
-                Token::Word("bar"),
-            ],
-        );
-    }
-}
-
-#[cfg(all(feature = "ansi", test))]
-mod ansi_parser_tests {
-
-    use super::{test::assert_tokens, Token};
-    use ansi_parser::AnsiSequence;
-    use heapless::Vec;
-
-    #[test]
-    fn escape_char_ignored_if_not_ansi_sequence() {
-        assert_tokens(
-            "foo\x1bbar",
-            vec![
-                Token::Word("foo"),
-                Token::EscapeSequence(AnsiSequence::Escape),
-                Token::Word("bar"),
-            ],
-        );
-
-        assert_tokens(
-            "foo\x1b[bar",
-            vec![
-                Token::Word("foo"),
-                Token::EscapeSequence(AnsiSequence::Escape),
-                Token::Word("[bar"),
-            ],
-        );
-
-        // can escape the escape char
-        assert_tokens(
-            "foo\x1b\x1bbar",
-            vec![
-                Token::Word("foo"),
-                Token::EscapeSequence(AnsiSequence::Escape),
-                Token::Word("bar"),
-            ],
-        );
-    }
-
-    #[test]
-    fn escape_char_colors() {
-        assert_tokens(
-            "foo\x1b[34mbar",
-            vec![
-                Token::Word("foo"),
-                Token::EscapeSequence(AnsiSequence::SetGraphicsMode(
-                    Vec::from_slice(&[34]).unwrap(),
-                )),
-                Token::Word("bar"),
-            ],
-        );
-        assert_tokens(
-            "foo\x1b[95mbar",
-            vec![
-                Token::Word("foo"),
-                Token::EscapeSequence(AnsiSequence::SetGraphicsMode(
-                    Vec::from_slice(&[95]).unwrap(),
-                )),
-                Token::Word("bar"),
-            ],
-        );
-        assert_tokens(
-            "foo\x1b[48;5;16mbar",
-            vec![
-                Token::Word("foo"),
-                Token::EscapeSequence(AnsiSequence::SetGraphicsMode(
-                    Vec::from_slice(&[48, 5, 16]).unwrap(),
-                )),
                 Token::Word("bar"),
             ],
         );
