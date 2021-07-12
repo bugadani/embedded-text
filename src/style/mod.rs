@@ -597,43 +597,6 @@ mod test {
     }
 
     #[test]
-    #[cfg(feature = "ansi")]
-    fn test_measure_line_cursor_back() {
-        let character_style = MonoTextStyleBuilder::new()
-            .font(&FONT_6X9)
-            .text_color(BinaryColor::On)
-            .build();
-
-        let style = TextBoxStyleBuilder::new()
-            .alignment(HorizontalAlignment::Center)
-            .build();
-
-        let mut text = Parser::parse("123\x1b[2D");
-
-        let mut plugin = PluginWrapper::new(NoPlugin::new());
-        let lm = style.measure_line(
-            &mut plugin,
-            &character_style,
-            &mut text,
-            5 * FONT_6X9.character_size.width,
-        );
-        assert_eq!(lm.width, 3 * FONT_6X9.character_size.width);
-
-        // Now a case where the string itself without rewind is wider than the line and the
-        // continuation after rewind extends the line.
-        let mut text = Parser::parse("123\x1b[2D456");
-
-        let mut plugin = PluginWrapper::new(NoPlugin::new());
-        let lm = style.measure_line(
-            &mut plugin,
-            &character_style,
-            &mut text,
-            5 * FONT_6X9.character_size.width,
-        );
-        assert_eq!(lm.width, 4 * FONT_6X9.character_size.width);
-    }
-
-    #[test]
     fn test_measure_line_counts_nbsp() {
         let character_style = MonoTextStyleBuilder::new()
             .font(&FONT_6X9)

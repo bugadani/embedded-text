@@ -104,14 +104,14 @@ jobs:
         compare -metric AE ./assets/alignment-vertical.png ./target/screenshots/alignment-vertical.png result.png
         EG_SIMULATOR_DUMP="./target/screenshots/paragraph_spacing.png" cargo run --example paragraph_spacing
         compare -metric AE ./assets/paragraph_spacing.png ./target/screenshots/paragraph_spacing.png result.png
+        EG_SIMULATOR_DUMP="./target/screenshots/plugin-ansi.png" cargo run --example plugin-ansi
+        compare -metric AE ./assets/plugin-ansi.png ./target/screenshots/plugin-ansi.png result.png
         EG_SIMULATOR_DUMP="./target/screenshots/plugin-tail.png" cargo run --example plugin-tail
         compare -metric AE ./assets/plugin-tail.png ./target/screenshots/plugin-tail.png result.png
         EG_SIMULATOR_DUMP="./target/screenshots/special-characters.png" cargo run --example special-characters
         compare -metric AE ./assets/special-characters.png ./target/screenshots/special-characters.png result.png
         EG_SIMULATOR_DUMP="./target/screenshots/special-characters-tabs.png" cargo run --example special-characters-tabs
         compare -metric AE ./assets/special-characters-tabs.png ./target/screenshots/special-characters-tabs.png result.png
-        EG_SIMULATOR_DUMP="./target/screenshots/styles-ansi.png" cargo run --example styles-ansi
-        compare -metric AE ./assets/styles-ansi.png ./target/screenshots/styles-ansi.png result.png
         EG_SIMULATOR_DUMP="./target/screenshots/styles-plugin.png" cargo run --example styles-plugin --features=plugin
         compare -metric AE ./assets/styles-plugin.png ./target/screenshots/styles-plugin.png result.png
         EG_SIMULATOR_DUMP="./target/screenshots/styles-static.png" cargo run --example styles-static

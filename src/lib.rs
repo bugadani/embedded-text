@@ -91,7 +91,6 @@
 //!
 //! ## Cargo features
 //!
-//! * `ansi`: enables ANSI sequence support. This feature is enabled by default.
 //! * `plugin` (*experimental*): allows the user to implement plugins.
 //!
 //! [embedded-graphics]: https://github.com/embedded-graphics/embedded-graphics/

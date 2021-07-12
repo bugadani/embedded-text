@@ -13,6 +13,7 @@ use embedded_graphics_simulator::{
     BinaryColorTheme, OutputSettingsBuilder, SimulatorDisplay, Window,
 };
 use embedded_text::{
+    plugin::ansi::Ansi,
     style::{HeightMode, TabSize, TextBoxStyleBuilder},
     TextBox,
 };
@@ -46,7 +47,8 @@ fn main() {
     let bounds = Rectangle::new(Point::zero(), Size::new(180, 0));
 
     // Create the text box and apply styling options.
-    let text_box = TextBox::with_textbox_style(text, bounds, character_style, textbox_style);
+    let text_box = TextBox::with_textbox_style(text, bounds, character_style, textbox_style)
+        .add_plugin(Ansi::new());
 
     // Create a simulated display with the dimensions of the text box.
     let mut display = SimulatorDisplay::new(text_box.bounding_box().size);

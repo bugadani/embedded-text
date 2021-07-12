@@ -15,9 +15,8 @@ exclude = [
 ]
 
 [features]
-ansi = ["ansi-parser", "as-slice"]
 plugin = []
-default = ["ansi"]
+default = []
 
 [[example]]
 name = "interactive-editor"
@@ -34,8 +33,8 @@ required-features = ["plugin"]
 [dependencies]
 az = "1.1"
 embedded-graphics = "0.7.0"
-ansi-parser = { version = "0.8.0", default-features = false, optional = true }
-as-slice = { version = "0.1.4", optional = true }
+ansi-parser = { version = "0.8.0", default-features = false }
+as-slice = { version = "0.1.4" }
 object-chain = "0.1"
 
 [dev-dependencies]

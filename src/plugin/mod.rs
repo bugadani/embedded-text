@@ -28,6 +28,7 @@ mod private;
 #[cfg(not(feature = "plugin"))]
 use private::Plugin;
 
+pub mod ansi;
 pub mod tail;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]

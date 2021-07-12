@@ -10,6 +10,7 @@ Unreleased
  * [#134] `Tail` plugin
  * [#135] Allow using the built-in plugins without the `plugin` feature.
  * [#137] Allow using multiple plugins.
+ * [#138] `Ansi` plugin to parse ANSI escape sequences.
 
 ## Changed:
 
@@ -18,11 +19,13 @@ Unreleased
 ## Removed:
 
  * [#134] `Scrolling` vertical alignment
+ * [#138] `ansi` feature flag
 
 [#133]: https://github.com/embedded-graphics/embedded-text/pull/133
 [#134]: https://github.com/embedded-graphics/embedded-text/pull/134
 [#135]: https://github.com/embedded-graphics/embedded-text/pull/135
 [#137]: https://github.com/embedded-graphics/embedded-text/pull/137
+[#138]: https://github.com/embedded-graphics/embedded-text/pull/138
 
 0.5.0-beta.2 (2021-07-10)
 ==========================
