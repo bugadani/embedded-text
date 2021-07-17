@@ -1,4 +1,7 @@
-//! Plugin allow changing TextBox behaviour.
+//! Plugins allow changing TextBox behaviour.
+//!
+//! Note: Custom plugins are experimental. Ff you wish to implement custom plugins,
+//! you need to activate the `plugin` feature.
 
 use core::{
     cell::RefCell,
@@ -54,7 +57,10 @@ where
 /// Plugin marker trait.
 ///
 /// This trait is an implementation detail. Most likely you don't need to implement this.
-/// If you wish to implement a plugin, see [Plugin].
+#[cfg_attr(
+    feature = "plugin",
+    doc = "If you wish to implement a plugin, see [Plugin]."
+)]
 // TODO: remove this trait once Plugin is stabilized, then move Plugin here
 pub trait PluginMarker<'a, C: PixelColor>: Plugin<'a, C> {}
 
