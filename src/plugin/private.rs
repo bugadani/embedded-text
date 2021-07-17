@@ -66,10 +66,10 @@ where
 
     /// Called before TextBox rendering is started.
     #[inline]
-    fn on_start_render<S: CharacterStyle>(
+    fn on_start_render<S: CharacterStyle + TextRenderer>(
         &mut self,
         _cursor: &mut Cursor,
-        _props: TextBoxProperties<'_, S>,
+        _props: &TextBoxProperties<'_, S>,
     ) {
     }
 }
@@ -116,12 +116,12 @@ where
             .post_render(draw_target, character_style, text, bounds)
     }
 
-    fn on_start_render<S: CharacterStyle>(
+    fn on_start_render<S: CharacterStyle + TextRenderer>(
         &mut self,
         cursor: &mut Cursor,
-        props: TextBoxProperties<'_, S>,
+        props: &TextBoxProperties<'_, S>,
     ) {
-        self.object.on_start_render(cursor, props)
+        self.object.on_start_render(cursor, &props)
     }
 }
 
@@ -174,12 +174,12 @@ where
             .post_render(draw_target, character_style, text, bounds)
     }
 
-    fn on_start_render<S: CharacterStyle>(
+    fn on_start_render<S: CharacterStyle + TextRenderer>(
         &mut self,
         cursor: &mut Cursor,
-        props: TextBoxProperties<'_, S>,
+        props: &TextBoxProperties<'_, S>,
     ) {
-        self.parent.on_start_render(cursor, props.clone());
-        self.object.on_start_render(cursor, props);
+        self.parent.on_start_render(cursor, &props);
+        self.object.on_start_render(cursor, &props);
     }
 }

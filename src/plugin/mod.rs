@@ -172,10 +172,11 @@ where
         this.peeked_token.0 = len;
         this.peeked_token.1.replace(token);
 
-        this.lookahead = this.plugin.clone();
+        // keeping this here messes up editor example with extremely long words.
+        // this.lookahead = this.plugin.clone();
     }
 
-    pub fn on_start_render<S: CharacterStyle>(
+    pub fn on_start_render<S: CharacterStyle + TextRenderer>(
         &self,
         cursor: &mut Cursor,
         props: TextBoxProperties<'_, S>,
@@ -183,7 +184,7 @@ where
         let mut this = self.inner.borrow_mut();
         this.peeked_token = (0, None);
 
-        this.plugin.on_start_render(cursor, props);
+        this.plugin.on_start_render(cursor, &props);
     }
 
     pub fn post_render<T, D>(

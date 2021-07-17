@@ -107,7 +107,7 @@ impl Cursor {
     }
 
     #[must_use]
-    pub fn line(&self) -> LineCursor {
+    pub(crate) fn line(&self) -> LineCursor {
         LineCursor {
             start: Point::new(self.bounds.top_left.x, self.y),
             width: self.bounds.size.width,

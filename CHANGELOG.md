@@ -10,6 +10,7 @@ Unreleased
  * [#134] `Tail` plugin
  * [#135] Allow using the built-in plugins without the `plugin` feature.
  * [#137] Allow using multiple plugins.
+ * [#136] `Cursor` is now public.
 
 ## Changed:
 
@@ -22,6 +23,7 @@ Unreleased
 [#133]: https://github.com/embedded-graphics/embedded-text/pull/133
 [#134]: https://github.com/embedded-graphics/embedded-text/pull/134
 [#135]: https://github.com/embedded-graphics/embedded-text/pull/135
+[#136]: https://github.com/embedded-graphics/embedded-text/pull/136
 [#137]: https://github.com/embedded-graphics/embedded-text/pull/137
 
 0.5.0-beta.2 (2021-07-10)
