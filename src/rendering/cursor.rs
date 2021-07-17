@@ -73,7 +73,7 @@ impl LineCursor {
 
 /// Internal structure that keeps track of position information while rendering a [`TextBox`].
 ///
-/// [`TextBox`]: ../../struct.TextBox.html
+/// [`TextBox`]: crate::TextBox
 #[derive(Copy, Clone, Debug)]
 pub struct Cursor {
     /// Current cursor position
