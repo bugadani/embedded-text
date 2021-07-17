@@ -129,8 +129,7 @@
 //!  - Move the cursor backward `<n>` characters: `\x1b[<n>D`. This command will stop at the start
 //!    of line.
 //!
-//! [`TextBox`]: ../struct.TextBox.html
-//! [`TextBoxStyle`]: struct.TextBoxStyle.html
+//! [`TextBox`]: crate::TextBox
 //! [`TextBoxStyleBuilder`]: builder/struct.TextBoxStyleBuilder.html
 //! [`TextBoxStyleBuilder::new`]: builder/struct.TextBoxStyleBuilder.html#method.new
 //! [`TextBox::into_styled`]: ../struct.TextBox.html#method.into_styled

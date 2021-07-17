@@ -73,7 +73,7 @@ impl LineCursor {
 
 /// Internal structure that keeps track of position information while rendering a [`TextBox`].
 ///
-/// [`TextBox`]: ../../struct.TextBox.html
+/// [`TextBox`]: crate::TextBox
 #[derive(Copy, Clone, Debug)]
 pub struct Cursor {
     /// Current cursor position
@@ -107,7 +107,7 @@ impl Cursor {
     }
 
     #[must_use]
-    pub fn line(&self) -> LineCursor {
+    pub(crate) fn line(&self) -> LineCursor {
         LineCursor {
             start: Point::new(self.bounds.top_left.x, self.y),
             width: self.bounds.size.width,
